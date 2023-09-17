@@ -6,6 +6,8 @@
 #include <GyverMax7219.h>
 #include <VolAnalyzer.h>
 
+#include "soc/timer_group_reg.h"
+#include "soc/timer_group_struct.h"
 #include "tmr.h"
 
 const char* stations[] = {
@@ -90,7 +92,7 @@ void change_state() {
 // ========================= ANALYZ =========================
 void analyz0(uint8_t vol) {
     static uint16_t offs;
-    offs += 20;
+    offs += 20 * vol / 100;
     for (uint8_t i = 0; i < ANALYZ_WIDTH; i++) {
         int16_t val = inoise8(i * 50, offs);
         val -= 128;
@@ -130,7 +132,7 @@ void core0(void* p) {
     // ========================= SETUP =========================
     EncButton eb(ENC_S1, ENC_S2, ENC_BTN);
     VolAnalyzer sound(ANALYZ_PIN);
-    sound.setAmpliDt(200);
+    sound.setAmpliDt(300);
     sound.setTrsh(data.trsh);
     sound.setPulseMin(40);
     sound.setPulseMax(80);
@@ -204,7 +206,7 @@ void core0(void* p) {
             }
         }
 
-        if (data.state && !matrix_tmr.state() && sound.tick()) {
+        if (sound.tick() && data.state && !matrix_tmr.state()) {
             if (sound.pulse()) pulse = 1;
             // Serial.print(sound.getVol());  // громкость 0-100
             // Serial.print(',');
@@ -288,6 +290,10 @@ void core0(void* p) {
             }
             memory.update();
         }
-        vTaskDelay(1);
+
+        // vTaskDelay(1);
+        TIMERG0.wdt_wprotect = TIMG_WDT_WKEY_VALUE;  // write enable
+        TIMERG0.wdt_feed = 1;                        // feed dog
+        TIMERG0.wdt_wprotect = 0;                    // write protect
     }
 }
