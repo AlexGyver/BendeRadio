@@ -1,0 +1,37 @@
+#######################################
+# Syntax Coloring Map For VolAnalyzer
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+VolAnalyzer	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setPin	KEYWORD2
+setDt	KEYWORD2
+setPeriod	KEYWORD2
+setWindow	KEYWORD2
+setVolDt	KEYWORD2
+getVol	KEYWORD2
+setVolMin	KEYWORD2
+setVolMax	KEYWORD2
+setTrsh	KEYWORD2
+setAmpliDt	KEYWORD2
+setVolK	KEYWORD2
+setAmpliK	KEYWORD2
+getMin	KEYWORD2
+getMax	KEYWORD2
+tick	KEYWORD2
+getRaw	KEYWORD2
+pulse	KEYWORD2
+setPulseMax	KEYWORD2
+setPulseMin	KEYWORD2
+setPulseTimeout	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
