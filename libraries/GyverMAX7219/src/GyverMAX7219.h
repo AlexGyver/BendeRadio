@@ -49,10 +49,10 @@
 
 static SPISettings MAX_SPI_SETT(MAX_SPI_SPEED, MSBFIRST, SPI_MODE0);
 
-template <uint8_t width, uint8_t height, uint8_t CSpin, uint8_t DATpin = 0, uint8_t CLKpin = 0>
+template <uint8_t WIDTH, uint8_t HEIGHT, uint8_t CSpin, uint8_t DATpin = 0, uint8_t CLKpin = 0>
 class MAX7219 : public GyverGFX {
    public:
-    MAX7219() : GyverGFX(width * 8, height * 8) {
+    MAX7219() : GyverGFX(WIDTH * 8, HEIGHT * 8) {
         begin();
     }
 
@@ -101,7 +101,7 @@ class MAX7219 : public GyverGFX {
 
     // залить байтом
     void fillByte(uint8_t data) {
-        for (uint16_t i = 0; i < width * height * 8; i++) buffer[i] = data;
+        for (uint16_t i = 0; i < WIDTH * HEIGHT * 8; i++) buffer[i] = data;
     }
 
     // установить точку
@@ -177,7 +177,7 @@ class MAX7219 : public GyverGFX {
         else size(_maxY, _maxX);
     }
 
-    uint8_t buffer[width * height * 8];
+    uint8_t buffer[WIDTH * HEIGHT * 8];
 
    private:
     int16_t getPosition(int16_t x, int16_t y) {
@@ -255,7 +255,7 @@ class MAX7219 : public GyverGFX {
         }
 
         _bx = x & 7;
-        return width * (height - 1 - (y >> 3)) + (width - 1 - (x >> 3)) + (y & 7) * width * height;  // позиция в буфере
+        return WIDTH * (HEIGHT - 1 - (y >> 3)) + (WIDTH - 1 - (x >> 3)) + (y & 7) * WIDTH * HEIGHT;  // позиция в буфере
     }
 
     void flip(int16_t& v) {
@@ -328,9 +328,9 @@ class MAX7219 : public GyverGFX {
         endData();
     }
 
-    const uint16_t _amount = width * height;
-    const uint16_t _maxX = width * 8;
-    const uint16_t _maxY = height * 8;
+    const uint16_t _amount = WIDTH * HEIGHT;
+    const int16_t _maxX = WIDTH * 8;
+    const int16_t _maxY = HEIGHT * 8;
     uint8_t _rot = 0, _bx = 0, _flip = 0, _conn = 0;
     bool _type = GM_ZIGZAG;
 };

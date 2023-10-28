@@ -6,22 +6,22 @@
 [![Foo](https://img.shields.io/badge/ПОДПИСАТЬСЯ-НА%20ОБНОВЛЕНИЯ-brightgreen.svg?style=social&logo=telegram&color=blue)](https://t.me/GyverLibs)
 
 # GyverGFX
-Лёгкая библиотека двухмерной графики для дисплеев и матриц
-- Точки
+Движок двухмерной графики для дисплеев и матриц
+- Точка
 - Линии
 - Прямоугольники
-- Скруглённые прямоугольники
-- Круги
+- Окружность
 - Кривая Безье
 - Битмап
 - Вывод текста (русский, английский) нескольких размеров
+- Вшиты 155 иконок
+- Бегущая строка
 
 ### Совместимость
 Совместима со всеми Arduino платформами (используются Arduino-функции)
 
 ## Содержание
 - [Установка](#install)
-- [Инициализация](#init)
 - [Использование](#usage)
 - [Пример](#example)
 - [Версии](#versions)
@@ -44,55 +44,177 @@
 - Через менеджер библиотек IDE: найти библиотеку как при установке и нажать "Обновить"
 - Вручную: **удалить папку со старой версией**, а затем положить на её место новую. "Замену" делать нельзя: иногда в новых версиях удаляются файлы, которые останутся при замене и могут привести к ошибкам!
 
-
-<a id="init"></a>
-## Инициализация
-```cpp
-GyverGFX();
-GyverGFX(int x, int y); // с указанием размеров "экрана"
-```
-
 <a id="usage"></a>
 ## Использование
+### GyverGFX
+
 ```cpp
+// конструктор
+GyverGFX();
+GyverGFX(int x, int y); // с указанием размеров "экрана"
+
+// методы
+void size(int x, int y);    // установить размер
+int width();                // получить ширину
+int height();               // получить высоту
+
+// ============ PRIMITIVE ============
 // fill:
-// GFX_CLEAR - очистить
+// GFX_CLEAR - очистить фигуру
 // GFX_FILL - залить фигуру
 // GFX_STROKE - обвести фигуру
-
-void size(int x, int y);                                            // установить размер
 virtual void dot(int x, int y, uint8_t fill = 1);                   // точка
-void fill(uint8_t fill = 1);                                        // залить
-void clear();                                                       // очистить
-void fastLineH(int y, int x0, int x1, uint8_t fill = 1);            // вертикальная линия
-void fastLineV(int x, int y0, int y1, uint8_t fill = 1);            // горизонтальная линия
+void fill(uint8_t fill = 1);                                        // залить экран
+void clear();                                                       // очистить экран
+void lineH(int y, int x0, int x1, uint8_t fill = 1);                // вертикальная линия
+void lineV(int x, int y0, int y1, uint8_t fill = 1);                // горизонтальная линия
 void line(int x0, int y0, int x1, int y1, uint8_t fill = 1);        // линия
-void rect(int x0, int y0, int x1, int y1, uint8_t fill = 1);        // прямоугольник
-void roundRect(int x0, int y0, int x1, int y1, uint8_t fill = 1);   // скруглённый прямоугольник
+void rect(int x0, int y0, int x1, int y1, uint8_t fill = 1);        // прямоугольник (координаты углов)
+void rectWH(int x0, int y0, int w, int h, uint8_t fill = 1);        // прямоугольник (координаты угла и размер)
+void roundRect(int x0, int y0, int x1, int y1, uint8_t fill = 1);   // скруглённый прямоугольник (координаты углов)
+void roundRectWH(int x0, int y0, int w, int h, uint8_t fill = 1);   // скруглённый прямоугольник (координаты угла и размер)
 void circle(int x, int y, int radius, uint8_t fill = 1);            // окружность
-void bezier(uint8_t* arr, uint8_t size, uint8_t dense, uint8_t fill = 1);   // кривая Безье
-void bezier16(int* arr, uint8_t size, uint8_t dense, uint8_t fill = 1);     // кривая Безье 16 бит
-void drawBitmap(int x, int y, const uint8_t *frame, int width, int height, uint8_t invert = 0, byte mode = 0);  // битмап
+void bezier(uint8_t *arr, uint8_t size, uint8_t dense, uint8_t fill = 1);     // кривая Безье
+void bezier16(int16_t *arr, uint8_t size, uint8_t dense, uint8_t fill = 1);   // кривая Безье 16 бит
+
+// ============ TEXT ============
+// наследует Print.h
+print(любой тип);
+println(любой тип);
+
+// вывести столбик-байт в текущий курсор с учётом масштаба и режима текста, автоматически перенесёт курсор
+void drawByte(uint8_t bits);
+void drawBytes(uint8_t *bytes, int amount);           // из массива
+void drawBytes_P(const uint8_t *bytes, int amount);   // из PROGMEM массива
+
+// mode:
+// GFX_ADD - добавить к буферу
+// GFX_REPLACE - заменить информацию в буфере
+void drawBitmap(int x, int y, const uint8_t *frame, int width, int height, uint8_t invert = 0, byte mode = 0);  // битмап (mode: GFX_ADD/GFX_REPLACE)
+void textDisplayMode(bool mode);        // установить режим вывода текста
+bool getTextDisplayMode();              // получить режим вывода текста
 
 void setCursor(int x, int y);           // установить курсор
-void setScale(uint8_t scale);           // масштаб текста
-void invertText(bool inv);              // инвертировать текст
-void autoPrintln(bool mode);            // автоматический перенос строки
-void textDisplayMode(bool mode);        // режим вывода текста GFX_ADD/GFX_REPLACE
+int getCursorX();                       // получить курсор x
+int getCursorY();                       // получить курсор y
 
-// дефайны настроек (перед подключением библиотеки)
-#define GFX_NO_PRINT        // отключить модуль вывода текста (экономия памяти)
+void setScale(uint8_t scale);           // установить масштаб текста (1-4)
+uint8_t getScale();                     // получить масштаб текста
+
+void invertText(bool inv);              // установить инверсию текста
+bool getInvertText();                   // получить инверсию текста
+
+void autoPrintln(bool mode);            // установить автоматический перенос текста
+bool getAutoPrintln();                  // получить автоматический перенос текста
+
+void setTextBound(int x0, int x1);      // установить границы вывода текста по х
+void resetTextBound();                  // сбросить границы вывода текста до (0, ширина)
+int getTextBoundX0();                   // получить границу вывода 0
+int getTextBoundX1();                   // получить границу вывода 1
+
+uint16_t strlen_fix(const char *str);   // определить длину строки с любыми символами (в т.ч. русскими)
+uint16_t strlen_fix_P(PGM_P str);       // определить длину PGM строки с любыми символами (в т.ч. русскими)
+
+// ============ DEFINE ============
+// дефайны настроек
+// (перед подключением библиотеки)
+#define GFX_NO_PRINT                    // отключить модуль вывода текста (экономия памяти)
+```
+
+#### Встроенные иконки
+В библиотеке идёт набор из 155 иконок 8х8, файл *fonts/icons8x8.h*. Выводятся следующим образом:
+```cpp
+obj.drawBytes_P(GFX_icons::alarm, 8);
+obj.drawBytes_P(GFX_icons::email, 8);
+```
+
+### RunningGFX
+Асинхронная бегущая строка. Не хранит строку внутри себя, поэтому по очевидным причинам поддерживает работу с:
+- Глобально созданными `String` - строками
+- Глобально созданными `PROGMEM` - строками
+- Глобально созданными `char[]` - строками
+- Строковыми константами (они изначально являются глобальными)
+
+Особенности:
+- Для автоматического обновления строки в классе должен быть реализован метод `update()`
+- Строку можно изменять во время движения: `setText()` не запускает движение заново, поэтому при обновлении String-строки можно вызвать setText для автоматического пересчёта длины
+- Настройки бегущей строки (масштаб, режим текста) не влияют на дисплей, точнее автоматически устанавливаются обратно
+- Один объект управляет одной строкой. если нужно несколько одновременно бегущих строк - создай несколько обьектов, пример ниже
+
+```cpp
+// конструктор
+RunningGFX(GyverGFX* gfx);
+
+// методы
+void setText(const char* str);      // установить текст const char*
+void setText(String& str);          // установить текст String
+void setText_P(PGM_P str);          // установить текст из PROGMEM (глобальный)
+
+void invertText(bool inv);          // инвертировать текст
+void setScale(uint8_t scale);       // масштаб текста
+void textDisplayMode(bool mode);    // режим вывода текста GFX_ADD/GFX_REPLACE
+void setWindow(int16_t x0, int16_t x1, int16_t y);  // установить окно (x0, x1, y)
+void setSpeed(uint16_t pixPerSec);  // установить скорость (пикселей в секунду)
+
+void start();                       // запустить бегущую строку с начала
+void stop();                        // остановить бегущую строку
+void resume();                      // продолжить движение с момента остановки
+
+// тикер. Вернёт 0 в холостом, 1 при новом шаге, 2 при завершении движения
+// Можно передать false чтобы дисплей не обновлялся сам
+uint8_t tick(bool update = true);
+
+// сдвинуть строку на 1 пиксель. Можно передать false чтобы дисплей не обновлялся сам
+uint8_t tickManual(bool update = true);
 ```
 
 <a id="example"></a>
 ## Пример
+
 ```cpp
-// пример наследования в класс
+// пример наследования в класс. Нужно реализовать методы dot и update
 class MAX7219 : public GyverGFX {
 public:
-    MAX7219() : GyverGFX(width * 8, height * 8) {
-        begin();
-    }
+  MAX7219(int width, int height) : GyverGFX(width * 8, height * 8) {}
+  void dot(int x, int y, uint8_t fill = GFX_FILL) {
+    // ...
+  }
+  void update() {
+    // ...
+  }
+};
+```
+
+```cpp
+// пример RunningGFX
+// RunningGFX работает с классом, который наследует GyverGFX. Например библиотека GyverMAX7219
+
+MAX7219<4, 1, 5> mtrx;  // одна матрица (1х1), пин CS на D5
+RunningGFX run1(&mtrx);
+RunningGFX run2(&mtrx);
+const char pstr_g[] PROGMEM = "Global pgm string";
+String str_g = "123";
+
+void setup() {
+  mtrx.begin();       // запускаем
+  mtrx.setBright(5);  // яркость 0..15
+
+  run1.setText("hello");  // строковая константа
+  // run1.setText(str_g); // глобальная стринга
+  run1.setSpeed(15);
+  run1.setWindow(0, 16, 0);
+  run1.start();
+
+  run1.setText_P(pstr_g); // глобальная PGM строка
+  run2.setSpeed(10);
+  run2.setWindow(8, 16, 0);
+  run2.start();
+}
+
+void loop() {
+  run1.tick();
+  run2.tick();
+}
 ```
 
 <a id="versions"></a>
@@ -104,6 +226,13 @@ public:
 - v1.4 - мелкие фиксы
 - v1.5 - добавлено отключение модуля вывода текста GFX_NO_PRINT
 - v1.5.1 - мелкие фиксы
+- v1.6 - мелкие улучшения, добавлен движок бегущей строки
+- v1.7 
+  - Улучшена бегущая строка
+  - Добавлены настройки
+  - Добавлены новые инструменты вывода графики (drawByte, drawBytes, drawBytes_p)
+  - Добавлены иконки
+  - Улучшен шрифт
 
 <a id="feedback"></a>
 ## Баги и обратная связь

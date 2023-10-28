@@ -3,7 +3,7 @@
 #include <EEManager.h>
 #include <EncButton.h>
 #include <FastLED.h>
-#include <GyverMax7219.h>
+#include <GyverMAX7219.h>
 #include <VolAnalyzer.h>
 
 #include "soc/timer_group_reg.h"

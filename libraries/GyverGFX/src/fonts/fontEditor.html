@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    .input {
+      width: 200px;
+    }
+
+    .cont {
+      display: flex;
+    }
+
+    .btn {
+      width: 20px;
+      height: 20px;
+      box-sizing: border-box;
+      border: 1px inset white;
+      background: black;
+    }
+
+    .active {
+      background: red;
+    }
+  </style>
+</head>
+
+<body>
+  <input class="input" id="in" type="text" onchange="update();export_hex()"><br><br>
+  <div id="cont" class="cont"></div><br>
+  <input class="input" id="out" type="text"><br>
+
+  <script>
+    for (let x = 0; x < 5; x++) {
+      EL('cont').innerHTML += `<div class="col" id="col_${x}"></div>`;
+      for (let y = 0; y < 8; y++) {
+        EL(`col_${x}`).innerHTML += `<div class="btn" id="row_${x}_${y}" onclick="this.classList.toggle('active');export_hex()"></div>`;
+      }
+    }
+
+    function EL(id) {
+      return document.getElementById(id);
+    }
+    function update() {
+      let arr = EL('in').value.replace('{', '').replace('}', '').split(',').map(n => Number(n.trim()));
+      for (let x = 0; x < 5; x++) {
+        for (let y = 0; y < 8; y++) {
+          let btn = EL(`row_${x}_${y}`);
+          btn.classList.remove('active');
+          if ((arr[x] >> y) & 1) btn.classList.add('active');
+        }
+      }
+    }
+    function export_hex() {
+      let str = '';
+      for (let x = 0; x < 5; x++) {
+        let byte = 0;
+        for (let y = 0; y < 8; y++) {
+          byte >>= 1;
+          if (EL(`row_${x}_${y}`).classList.contains('active')) {
+            byte |= (1 << 7);
+          }
+        }
+        str += '0x' + byte.toString(16);
+        if (x != 4) str += ', ';
+      }
+      EL('out').value = str;
+    }
+  </script>
+</body>
+
+</html>

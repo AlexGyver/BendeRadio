@@ -7,6 +7,7 @@
 # Datatypes (KEYWORD1)
 #######################################
 GyverGFX	KEYWORD1
+RunningGFX	KEYWORD1
 
 GFX_NO_PRINT	KEYWORD1
 
@@ -14,6 +15,8 @@ GFX_NO_PRINT	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 size	KEYWORD2
+width	KEYWORD2
+height	KEYWORD2
 fill	KEYWORD2
 clear	KEYWORD2
 dot	KEYWORD2
@@ -23,17 +26,47 @@ fastLineH	KEYWORD2
 fastLineV	KEYWORD2
 line	KEYWORD2
 rect	KEYWORD2
+rectWH	KEYWORD2
 roundRect	KEYWORD2
+roundRectWH	KEYWORD2
 circle	KEYWORD2
 bezier	KEYWORD2
 bezier16	KEYWORD2
 drawBitmap	KEYWORD2
-setCursor	KEYWORD2
-setScale	KEYWORD2
-invertText	KEYWORD2
-autoPrintln	KEYWORD2
+
+drawByte	KEYWORD2
+drawBytes	KEYWORD2
+drawBitmap	KEYWORD2
 textDisplayMode	KEYWORD2
-write	KEYWORD2
+getTextDisplayMode	KEYWORD2
+setCursor	KEYWORD2
+getCursorX	KEYWORD2
+getCursorY	KEYWORD2
+setScale	KEYWORD2
+getScale	KEYWORD2
+invertText	KEYWORD2
+getInvertText	KEYWORD2
+autoPrintln	KEYWORD2
+getAutoPrintln	KEYWORD2
+setTextBound	KEYWORD2
+resetTextBound	KEYWORD2
+getTextBoundX0	KEYWORD2
+getTextBoundX1	KEYWORD2
+strlen_fix	KEYWORD2
+strlen_fix_P	KEYWORD2
+
+setText	KEYWORD2
+setText_P	KEYWORD2
+invertText	KEYWORD2
+setScale	KEYWORD2
+textDisplayMode	KEYWORD2
+setWindow	KEYWORD2
+setSpeed	KEYWORD2
+start	KEYWORD2
+stop	KEYWORD2
+resume	KEYWORD2
+tick	KEYWORD2
+tickManual	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
