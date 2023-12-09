@@ -83,6 +83,7 @@ class RunningGFX {
     // тикер. Вернёт 0 в холостом, 1 при новом шаге, 2 при завершении движения
     // Можно передать false чтобы дисплей не обновлялся сам
     uint8_t tick(bool update = true) {
+        if (!_str) return 0;
         if (_tmr && (uint16_t)((uint16_t)millis() - _tmr) >= _prd) {
             resume();
             return tickManual(update);
@@ -92,6 +93,7 @@ class RunningGFX {
 
     // сдвинуть строку на 1 пиксель. Можно передать false чтобы дисплей не обновлялся сам
     uint8_t tickManual(bool update = true) {
+        if (!_str) return 0;
         gfx_config_t cfg = _gfx->cfg;
         _gfx->setScale(_scale);
         _gfx->invertText(_invert);
